@@ -240,6 +240,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      * by either of the constructors with arguments.
      * MUST be a power of two <= 1<<30.
      */
+    //该值为1073741824,1左移30次，即1*2^30
     static final int MAXIMUM_CAPACITY = 1 << 30;
 
     /**
@@ -374,6 +375,15 @@ public class HashMap<K,V> extends AbstractMap<K,V>
 
     /**
      * Returns a power of two size for the given target capacity.
+     * 对于给定的目标容量，返回两倍大小的幂
+     *
+     * cap=101
+     *    n=100 (0110 0100)
+     * n>>>1=50 (0011 0010)
+     * n|=n>>>1 (0111 0110) 118
+     * n>>>2=29 (0001 1101)
+     * n|=n>>>2 (0111 1111) 127
+     *   | 或运算：对应位都为0则取0，否则为1
      */
     static final int tableSizeFor(int cap) {
         int n = cap - 1;
@@ -417,7 +427,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
 
     /**
      * The next size value at which to resize (capacity * load factor).
-     *
+     * 下一次的扩容大小
      * @serial
      */
     // (The javadoc description is true upon serialization.
@@ -626,11 +636,15 @@ public class HashMap<K,V> extends AbstractMap<K,V>
                    boolean evict) {
         Node<K,V>[] tab; Node<K,V> p; int n, i;
         if ((tab = table) == null || (n = tab.length) == 0)
+            //当第一次执行put时，调用resize()对table进行初始化
             n = (tab = resize()).length;
         if ((p = tab[i = (n - 1) & hash]) == null)
+            //tab[i],当前put的第几个元素
             tab[i] = newNode(hash, key, value, null);
         else {
+            //当put的key已经存在时，进行如下操作：
             Node<K,V> e; K k;
+            //当key的hash和key都相等时执行以下操作：
             if (p.hash == hash &&
                 ((k = p.key) == key || (key != null && key.equals(k))))
                 e = p;
@@ -650,6 +664,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
                     p = e;
                 }
             }
+            //当key的hash和key都相等时执行，并且返回旧的值
             if (e != null) { // existing mapping for key
                 V oldValue = e.value;
                 if (!onlyIfAbsent || oldValue == null)
@@ -673,11 +688,16 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      * with a power of two offset in the new table.
      *
      * @return the table
+     *
+     * 当第一次执行put时，oldCap和oldThr初始值都为0
      */
     final Node<K,V>[] resize() {
         Node<K,V>[] oldTab = table;
+        //oldCap为oldTab长度
         int oldCap = (oldTab == null) ? 0 : oldTab.length;
+        //oldThr为下次扩容的大小
         int oldThr = threshold;
+
         int newCap, newThr = 0;
         if (oldCap > 0) {
             if (oldCap >= MAXIMUM_CAPACITY) {
@@ -691,6 +711,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
         else if (oldThr > 0) // initial capacity was placed in threshold
             newCap = oldThr;
         else {               // zero initial threshold signifies using defaults
+            //初始化newCap table.length =16和newThr 12
             newCap = DEFAULT_INITIAL_CAPACITY;
             newThr = (int)(DEFAULT_LOAD_FACTOR * DEFAULT_INITIAL_CAPACITY);
         }
@@ -700,9 +721,11 @@ public class HashMap<K,V> extends AbstractMap<K,V>
                       (int)ft : Integer.MAX_VALUE);
         }
         threshold = newThr;
+        //初始化table大小为newCap=16
         @SuppressWarnings({"rawtypes","unchecked"})
         Node<K,V>[] newTab = (Node<K,V>[])new Node[newCap];
         table = newTab;
+
         if (oldTab != null) {
             for (int j = 0; j < oldCap; ++j) {
                 Node<K,V> e;
