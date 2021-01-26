@@ -422,6 +422,8 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      * the HashMap or otherwise modify its internal structure (e.g.,
      * rehash).  This field is used to make iterators on Collection-views of
      * the HashMap fail-fast.  (See ConcurrentModificationException).
+     *
+     * hashMap修改的次数
      */
     transient int modCount;
 
@@ -879,7 +881,15 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      * The map will be empty after this call returns.
      */
     public void clear() {
+        /**
+         * table数组，用来清空全部的table
+         * 通过for循环实现
+         * clear跟list = null的区别：
+         *  clear会将tab中的每个元素置为null，然后gc回收，但tab所对应的对象还存在
+         *  null直接将tab的索引置为null，tab所对应的对象就不存了
+         */
         Node<K,V>[] tab;
+
         modCount++;
         if ((tab = table) != null && size > 0) {
             size = 0;

@@ -103,6 +103,10 @@ public class HashSet<E>
      * default initial capacity (16) and load factor (0.75).
      */
     public HashSet() {
+        /**
+         * 默认初始化
+         * hashSet的本质为hashMap
+         */
         map = new HashMap<>();
     }
 

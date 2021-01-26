@@ -356,6 +356,7 @@ public class LinkedHashMap<K,V>
      * @throws IllegalArgumentException if the initial capacity is negative
      */
     public LinkedHashMap(int initialCapacity) {
+        //最大长度2^30
         super(initialCapacity);
         accessOrder = false;
     }
@@ -365,6 +366,12 @@ public class LinkedHashMap<K,V>
      * with the default initial capacity (16) and load factor (0.75).
      */
     public LinkedHashMap() {
+        /**
+         * 初始化LinkedHashMap
+         * 本质是new了一个hashmap
+         * 默认是按插入顺序迭代的
+         * 如果accessOrder为true则按访问顺序
+         */
         super();
         accessOrder = false;
     }
@@ -412,6 +419,7 @@ public class LinkedHashMap<K,V>
      *         specified value
      */
     public boolean containsValue(Object value) {
+        //本质上是通过for循环实现的
         for (LinkedHashMap.Entry<K,V> e = head; e != null; e = e.after) {
             V v = e.value;
             if (v == value || (value != null && value.equals(v)))

@@ -493,6 +493,7 @@ public class ArrayList<E> extends AbstractList<E>
      * @throws IndexOutOfBoundsException {@inheritDoc}
      */
     public E remove(int index) {
+        //首先校验index是否越界
         rangeCheck(index);
 
         modCount++;
@@ -500,6 +501,7 @@ public class ArrayList<E> extends AbstractList<E>
 
         int numMoved = size - index - 1;
         if (numMoved > 0)
+            //arraycopy(目标数组，目标数组的起始位置，返回的数组，目标数据开始的位置，赋值元素的数量)
             System.arraycopy(elementData, index+1, elementData, index,
                              numMoved);
         elementData[--size] = null; // clear to let GC do its work
@@ -521,6 +523,7 @@ public class ArrayList<E> extends AbstractList<E>
      * @return <tt>true</tt> if this list contained the specified element
      */
     public boolean remove(Object o) {
+        //同for循环判断是否相等，相等则移除该元素
         if (o == null) {
             for (int index = 0; index < size; index++)
                 if (elementData[index] == null) {
