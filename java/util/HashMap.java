@@ -637,9 +637,12 @@ public class HashMap<K,V> extends AbstractMap<K,V>
     final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
                    boolean evict) {
         Node<K,V>[] tab; Node<K,V> p; int n, i;
+        // 初始化
         if ((tab = table) == null || (n = tab.length) == 0)
             //当第一次执行put时，调用resize()对table进行初始化
             n = (tab = resize()).length;
+
+        //todo 长度计算方式？
         if ((p = tab[i = (n - 1) & hash]) == null)
             //tab[i],当前put的第几个元素
             tab[i] = newNode(hash, key, value, null);

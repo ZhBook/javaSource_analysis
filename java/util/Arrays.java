@@ -3210,6 +3210,7 @@ public class Arrays {
         T[] copy = ((Object)newType == (Object)Object[].class)
             ? (T[]) new Object[newLength]
             : (T[]) Array.newInstance(newType.getComponentType(), newLength);
+        //todo 为什么集合参数和size大小有可能不同？
         System.arraycopy(original, 0, copy, 0,
                          Math.min(original.length, newLength));
         return copy;
